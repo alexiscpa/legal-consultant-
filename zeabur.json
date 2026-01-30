@@ -1,0 +1,34 @@
+{
+  "$schema": "https://zeabur.com/schemas/zeabur.json",
+  "services": [
+    {
+      "id": "frontend",
+      "name": "legalpro-frontend",
+      "type": "static",
+      "build": {
+        "type": "npm",
+        "command": "npm run build",
+        "output": "dist"
+      },
+      "env": {
+        "VITE_API_URL": "${BACKEND_URL}"
+      }
+    },
+    {
+      "id": "backend",
+      "name": "legalpro-backend",
+      "type": "nodejs",
+      "root": "server",
+      "build": {
+        "type": "npm",
+        "command": "npm run build"
+      },
+      "start": {
+        "command": "npm start"
+      },
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
