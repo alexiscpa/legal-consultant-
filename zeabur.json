@@ -21,13 +21,14 @@
       "root": "server",
       "build": {
         "type": "npm",
-        "command": "npm run build"
+        "command": "npm install && npm run build"
       },
       "start": {
         "command": "npm start"
       },
       "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
       }
     }
   ]

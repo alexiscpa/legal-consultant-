@@ -5,6 +5,7 @@ import { initDb } from './db.js';
 import contractsRouter from './routes/contracts.js';
 import scenariosRouter from './routes/scenarios.js';
 import chatsRouter from './routes/chats.js';
+import geminiRouter from './routes/gemini.js';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/contracts', contractsRouter);
 app.use('/api/scenarios', scenariosRouter);
 app.use('/api/chats', chatsRouter);
+app.use('/api/gemini', geminiRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
