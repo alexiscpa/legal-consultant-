@@ -11,19 +11,32 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
   const [counts, setCounts] = useState({ contracts: 0, scenarios: 0 });
   const [recentContracts, setRecentContracts] = useState<StoredContract[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const contracts = storageService.getContracts();
-    setCounts({
-      contracts: contracts.length,
-      scenarios: storageService.getScenarios().length
-    });
-    setRecentContracts(contracts.slice(0, 3));
+    const loadData = async () => {
+      try {
+        const [contracts, scenarios] = await Promise.all([
+          storageService.getContracts(),
+          storageService.getScenarios()
+        ]);
+        setCounts({
+          contracts: contracts.length,
+          scenarios: scenarios.length
+        });
+        setRecentContracts(contracts.slice(0, 3));
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
 
   const stats = [
     { label: '累計審查合約', value: counts.contracts.toString(), color: 'text-[#0052cc]', icon: '📄' },
-    { label: '數據庫存儲', value: `${storageService.getStorageUsage()} KB`, color: 'text-[#ff8b00]', icon: '💾' },
+    { label: '數據庫狀態', value: loading ? '載入中...' : '已連線', color: 'text-[#ff8b00]', icon: '💾' },
     { label: '查詢歷史紀錄', value: counts.scenarios.toString(), color: 'text-[#006644]', icon: '🧭' },
   ];
 
@@ -38,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
       <div className="bg-white border border-[#dfe1e6] rounded-xl p-8 flex flex-col md:flex-row justify-between items-center shadow-sm">
         <div className="max-w-xl">
           <div className="flex items-center gap-2 mb-2">
-            <span className="bg-[#0052cc]/10 text-[#0052cc] text-[10px] font-bold px-2 py-0.5 rounded">2026.01.29</span>
+            <span className="bg-[#0052cc]/10 text-[#0052cc] text-[10px] font-bold px-2 py-0.5 rounded">2026.01.30</span>
             <h2 className="text-2xl font-bold text-[#172b4d]">歡迎回來，法務決策者</h2>
           </div>
           <p className="text-[#5e6c84] mb-6">
@@ -77,7 +90,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
         {/* Compliance Updates */}
         <div className={theme.card + " p-6 lg:col-span-2"}>
           <div className="flex items-center justify-between mb-6">
-            <h3 className={theme.heading2}>最新法規異動 (截至 2026.01.28)</h3>
+            <h3 className={theme.heading2}>最新法規異動 (截至 2026.01.30)</h3>
             <span className={theme.badgeIndigo}>2026 Q1 更新</span>
           </div>
           <div className="space-y-4">
@@ -103,7 +116,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
             <button onClick={() => onViewChange(AppView.STORAGE)} className="text-[10px] font-bold text-[#0052cc] hover:underline">查看全部</button>
           </div>
           <div className="flex-1 space-y-3">
-            {recentContracts.length > 0 ? (
+            {loading ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
+                <div className="w-8 h-8 border-2 border-[#0052cc]/20 border-t-[#0052cc] rounded-full animate-spin mb-2"></div>
+                <p className="text-xs text-[#5e6c84]">載入中...</p>
+              </div>
+            ) : recentContracts.length > 0 ? (
               recentContracts.map((contract) => (
                 <button
                   key={contract.id}
@@ -126,7 +144,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
               </div>
             )}
           </div>
-          <button 
+          <button
             onClick={() => onViewChange(AppView.CONTRACT_REVIEW)}
             className="w-full mt-6 py-2.5 bg-[#f4f5f7] text-[#172b4d] rounded-lg font-bold hover:bg-[#ebecf0] transition-all text-[11px] uppercase tracking-wider"
           >
