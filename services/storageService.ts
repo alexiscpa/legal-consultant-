@@ -1,7 +1,8 @@
 import { StoredContract, LegalScenario, ChatMessage } from '../types';
 
-// In development with Vite proxy, use empty string. In production, use VITE_API_URL
-const API_URL = import.meta.env.VITE_API_URL || '';
+// Use VITE_API_URL if set, otherwise use production URL
+const API_URL = import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://gwt-legal-consultant.zeabur.app' : '');
 
 export const storageService = {
   // Contracts
