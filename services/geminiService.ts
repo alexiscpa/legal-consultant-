@@ -2,7 +2,13 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ReviewResult, AdviceResponse, GroundingSource } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Try multiple ways to get the API key
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY ||
+               import.meta.env.GEMINI_API_KEY ||
+               (typeof process !== 'undefined' ? process.env.GEMINI_API_KEY : '') ||
+               '';
+
+const ai = new GoogleGenAI({ apiKey });
 
 const SYSTEM_INSTRUCTION = `你是一位擁有 20 年以上經驗的頂尖企業法務長 (General Counsel) 與法律顧問。
 你的對象是一位剛從財務會計背景轉任的管理部主管，他對法務領域相對陌生，但具備嚴謹的邏輯與財務數據敏感度。
