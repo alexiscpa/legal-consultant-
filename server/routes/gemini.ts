@@ -3,6 +3,16 @@ import { getScenarioAdvice, reviewContract, chatStream } from '../services/gemin
 
 const router = Router();
 
+// Diagnostic endpoint
+router.get('/status', (req, res) => {
+  const apiKey = process.env.GEMINI_API_KEY || '';
+  res.json({
+    apiKeySet: !!apiKey,
+    apiKeyLength: apiKey.length,
+    apiKeyPrefix: apiKey ? apiKey.substring(0, 8) + '...' : 'NOT SET'
+  });
+});
+
 // Get scenario advice
 router.post('/scenario', async (req, res) => {
   const { scenario } = req.body;
