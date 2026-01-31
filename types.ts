@@ -4,7 +4,30 @@ export enum AppView {
   SCENARIOS = 'scenarios',
   CONTRACT_REVIEW = 'contract-review',
   CONSULTATION = 'consultation',
-  STORAGE = 'storage'
+  STORAGE = 'storage',
+  USER_MANAGEMENT = 'user-management'
+}
+
+export type UserRole = 'admin' | 'user';
+export type UserStatus = 'pending' | 'approved' | 'rejected';
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  status: UserStatus;
+  created_at?: string;
+  approved_at?: string;
+  approved_by_name?: string;
+  last_login?: string;
+}
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
 }
 
 export interface LegalScenario {

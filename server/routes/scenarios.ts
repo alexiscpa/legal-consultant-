@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import pool from '../db.js';
+import { authenticate, requireApproved } from '../middleware/auth.js';
 
 const router = Router();
+
+// All routes require authentication and approved status
+router.use(authenticate);
+router.use(requireApproved);
 
 // Get all scenarios
 router.get('/', async (req, res) => {

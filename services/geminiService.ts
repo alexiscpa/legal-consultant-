@@ -1,12 +1,18 @@
 import { ReviewResult, AdviceResponse, GroundingSource } from "../types";
+import { getAuthHeaders } from './authService';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://legalpro-backend.zeabur.app';
+
+const getHeaders = (): HeadersInit => ({
+  'Content-Type': 'application/json',
+  ...getAuthHeaders(),
+});
 
 export const getScenarioAdvice = async (scenario: string): Promise<AdviceResponse> => {
   try {
     const response = await fetch(`${API_URL}/api/gemini/scenario`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getHeaders(),
       body: JSON.stringify({ scenario })
     });
 
@@ -30,7 +36,7 @@ export const reviewContract = async (contractContent: string): Promise<ReviewRes
   try {
     const response = await fetch(`${API_URL}/api/gemini/contract`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getHeaders(),
       body: JSON.stringify({ content: contractContent })
     });
 
@@ -54,7 +60,7 @@ export const startLegalChat = (onMessage: (text: string, sources: GroundingSourc
       try {
         const response = await fetch(`${API_URL}/api/gemini/chat`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getHeaders(),
           body: JSON.stringify({ message, history })
         });
 

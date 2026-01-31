@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { initDb } from './db.js';
+import authRouter from './routes/auth.js';
+import usersRouter from './routes/users.js';
 import contractsRouter from './routes/contracts.js';
 import scenariosRouter from './routes/scenarios.js';
 import chatsRouter from './routes/chats.js';
@@ -15,7 +17,13 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Routes
+// Auth routes (public)
+app.use('/api/auth', authRouter);
+
+// Admin routes
+app.use('/api/users', usersRouter);
+
+// Protected routes
 app.use('/api/contracts', contractsRouter);
 app.use('/api/scenarios', scenariosRouter);
 app.use('/api/chats', chatsRouter);

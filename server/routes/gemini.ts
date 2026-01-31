@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { getScenarioAdvice, reviewContract, chatStream } from '../services/geminiService.js';
+import { authenticate, requireApproved } from '../middleware/auth.js';
 
 const router = Router();
+
+// All routes require authentication and approved status
+router.use(authenticate);
+router.use(requireApproved);
 
 // Diagnostic endpoint
 router.get('/status', (req, res) => {
