@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const apiKey = process.env.GEMINI_API_KEY || '';
+console.log('Gemini API Key configured:', apiKey ? `${apiKey.substring(0, 10)}...` : 'NOT SET');
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // Simple in-memory cache with TTL
@@ -71,10 +72,14 @@ export async function getScenarioAdvice(scenario: string): Promise<{ text: strin
     return data;
   } catch (error: any) {
     console.error('Error fetching scenario advice:', error);
-    if (error.status === 429) {
+    const errorMessage = error.message || error.toString();
+    if (error.status === 429 || errorMessage.includes('429') || errorMessage.includes('quota')) {
       throw new Error('API 配額已用盡，請稍後再試或聯繫管理員升級方案。');
     }
-    throw error;
+    if (errorMessage.includes('API key')) {
+      throw new Error('API Key 設定錯誤，請檢查環境變數。');
+    }
+    throw new Error(`Gemini API 錯誤: ${errorMessage}`);
   }
 }
 
