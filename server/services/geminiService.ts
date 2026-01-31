@@ -52,7 +52,7 @@ export async function getScenarioAdvice(scenario: string): Promise<{ text: strin
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       systemInstruction: SYSTEM_INSTRUCTION
     });
 
@@ -88,7 +88,7 @@ export async function reviewContract(contractContent: string): Promise<any> {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       systemInstruction: SYSTEM_INSTRUCTION
     });
 
@@ -140,7 +140,7 @@ ${contractContent}`;
 export async function* chatStream(message: string, history: { role: string; content: string }[]): AsyncGenerator<string> {
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       systemInstruction: SYSTEM_INSTRUCTION
     });
 
