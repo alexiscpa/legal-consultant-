@@ -73,12 +73,7 @@ export async function getScenarioAdvice(scenario: string): Promise<{ text: strin
   } catch (error: any) {
     console.error('Error fetching scenario advice:', error);
     const errorMessage = error.message || error.toString();
-    if (error.status === 429 || errorMessage.includes('429') || errorMessage.includes('quota')) {
-      throw new Error('API 配額已用盡，請稍後再試或聯繫管理員升級方案。');
-    }
-    if (errorMessage.includes('API key')) {
-      throw new Error('API Key 設定錯誤，請檢查環境變數。');
-    }
+    // 暫時顯示完整錯誤訊息以便除錯
     throw new Error(`Gemini API 錯誤: ${errorMessage}`);
   }
 }
